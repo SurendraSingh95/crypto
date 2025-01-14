@@ -1,7 +1,10 @@
 import 'package:crepto/color/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
-import 'home_screen.dart';
+import 'Home/home_screen.dart';
+import 'Home/notification_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -64,7 +67,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
           SizedBox(width: 5,),
           Padding(
             padding: const EdgeInsets.only(right: 20),
-            child: Image.asset('assets/home/bell.png',scale: 1.2,),
+            child: InkWell(
+              onTap: (){
+                Get.to(()=>NotificationScreen());
+              },
+                child: Image.asset('assets/home/bell.png',scale: 1.2,)),
           ),
         ],
       ),
@@ -77,32 +84,62 @@ class _DashboardScreenState extends State<DashboardScreen> {
             _currentIndex = index;
           });
         },
-        selectedItemColor: Colors.orange,
-        unselectedItemColor: Colors.grey,
+        selectedItemColor:CryptoColor.button,
+        unselectedItemColor:CryptoColor.textBold,
+        backgroundColor:CryptoColor.white,
+        type: BottomNavigationBarType.fixed,
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: _buildImageWithBackground('assets/home/home.png', "Home", 0),
             label: "Home",
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.account_balance_wallet),
+            icon: _buildImageWithBackground('assets/home/wallet_outline_icon.png', "Wallet", 1),
             label: "Wallet",
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.swap_horiz),
+            icon: _buildImageWithBackground('assets/home/bottom3.png', "Trade", 2),
             label: "Trade",
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.miscellaneous_services),
+            icon: _buildImageWithBackground('assets/home/money_regular_icon.png', "Services", 3),
             label: "Services",
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
+            icon: _buildImageWithBackground('assets/home/person.png', "Profile", 4),
             label: "Profile",
           ),
         ],
       ),
+
+
     );
   }
+  Widget _buildImageWithBackground(String imagePath, String label, int index) {
+    final bool isSelected = _currentIndex == index;
+
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        if (isSelected)
+          Container(
+            width: 40, // Size of the circular background
+            height: 40,
+            decoration: BoxDecoration(
+              color:CryptoColor.button.withOpacity(0.2), // Background color for the selected item
+              shape: BoxShape.circle, // Circular shape
+            ),
+          ),
+        Image.asset(
+          imagePath,
+          width: 24, // Adjust the size of the image
+          height: 24,
+          color: isSelected ?CryptoColor.button :CryptoColor.textBold, // Color of the image
+        ),
+      ],
+    );
+  }
+
+
 
 }

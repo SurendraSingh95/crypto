@@ -23,13 +23,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       'Explore the world of digital assets with ease and confidence. Swerf keeps your assets safe and accessible.',
     },
     {
-      'image': 'assets/images/onboding1.png',
+      'image': 'assets/images/Group 8.png',
       'title': 'Crypto Made Simple',
       'description':
       'Swerf is built for every journey and we define the way you access and manage your crypto trading.',
     },
     {
-      'image': 'assets/images/onboding1.png',
+      'image': 'assets/images/Group 7.png',
       'title': 'Invest Boldly, Trade Securely',
       'description':
       'Seamless, secure, and smarter trading at your fingertips. Swerf ensures that your trading is fully secured.',

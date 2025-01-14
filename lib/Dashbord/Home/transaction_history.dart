@@ -17,7 +17,7 @@ class _TransactionHistoryState extends State<TransactionHistory> {
   double large = Constants.largeSize;
   double h = Constants.screen.height;
   double w = Constants.screen.width;
-  String selectedStatus = "";
+  String selectedStatus = "Successful";
 
   @override
   Widget build(BuildContext context) {

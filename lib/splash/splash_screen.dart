@@ -3,7 +3,12 @@ import 'dart:async';
 import 'dart:developer';
 
 // Flutter imports:
+import 'package:crepto/Auth/SignUp/sign_up_screen.dart';
+import 'package:crepto/Dashbord/Home/home_screen.dart';
+import 'package:crepto/Dashbord/dash_board_screen.dart';
 import 'package:crepto/OnBoardingScreen/OnboardingScreen.dart';
+import 'package:crepto/Screen/crypto_rates_screen.dart';
+import 'package:crepto/Screen/gift_card_rates_screen.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -24,6 +29,8 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     Timer(const Duration(seconds: 3), () {
     Get.to(()=>OnboardingScreen());
+    //Get.to(()=>CryptoCardRatesScreen());
+    //Get.to(()=>CryptoCardRatesScreen());
     });
   }
 

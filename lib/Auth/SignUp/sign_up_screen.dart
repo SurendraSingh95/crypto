@@ -28,12 +28,46 @@ class _SignUpScreenState extends State<SignUpScreen> {
   double w = Constants.screen.width;
   bool _obscureText = true;
   bool _isChecked = false;
-  bool isFormValid = false; // To track if the form is valid
+  bool isFormValid = false;
 
+  bool isValidLength = false;
+  bool hasUppercase = false;
+  bool hasNumber = false;
+  bool hasSpecialCharacter = false;
+
+  Widget _buildValidationRule(String text, bool isValid) {
+    return Row(
+      children: [
+        Icon(
+          isValid ? Icons.check_box : Icons.cancel,
+          color: isValid ? CryptoColor.button : CryptoColor.textRed ,
+          size: 18,
+        ),
+        SizedBox(width: 8),
+        Text(
+          text,
+          style: TextStyle(
+            fontSize: 14,
+            color: isValid ? CryptoColor.textNormal  :  CryptoColor.textNormal,
+          ),
+        ),
+      ],
+    );
+  }
+  void _validatePassword(String password) {
+    setState(() {
+      isValidLength = password.length >= 8;
+      hasUppercase = password.contains(RegExp(r'[A-Z]'));
+      hasNumber = password.contains(RegExp(r'[0-9]'));
+      hasSpecialCharacter = password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'));
+    });
+  }
   @override
   void initState() {
     super.initState();
-
+    registrationController.passwordController.addListener(() {
+      _validatePassword(registrationController.passwordController.text);
+    });
     // Add listeners to text controllers
     registrationController.firstNameController.addListener(_checkFormValidity);
     registrationController.lastNameController.addListener(_checkFormValidity);
@@ -237,56 +271,37 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 color: CryptoColor.textBold,
                 fontWeight: FontWeight.normal,
               ),
-               SizedBox(
-
-            child: TextFormField(
-              obscureText: _obscureText,
-              decoration: InputDecoration(
-                hintText: "Enter Password",
-                hintStyle: TextStyle(
-                  color: CryptoColor.cardBox,
-                  fontSize: 14.0,
-                  fontWeight: FontWeight.w400,
-                ),
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    _obscureText ? Icons.visibility : Icons.visibility_off,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      _obscureText = !_obscureText;
-                    });
-                  },
-                ),
-
-                fillColor: CryptoColor.textFormField,
-                filled: true,
-                counterText: "",
-                isDense:true,
-                contentPadding: EdgeInsets.only(top: 10,left: 10),
-                border: InputBorder.none,
-                // focusedBorder: OutlineInputBorder(
-                //   borderRadius: BorderRadius.circular(8.0),
-                //   // borderSide: BorderSide(
-                //   //   color: borderColor ?? Colors.transparent, // Remove border color
-                //   // ),
-                // ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                  borderSide: BorderSide(
-                    color:  Colors.transparent, // Remove border color
-                  ),
-                ),
-                errorBorder: OutlineInputBorder(
-                  gapPadding: 12,
-                  borderRadius: BorderRadius.circular(8.0),
-                  borderSide: const BorderSide(
-                    color: Colors.red, // Set the default border color
+              TextFormField(
+                obscureText: _obscureText,
+                controller: registrationController.passwordController,
+                decoration: InputDecoration(
+                  hintText: "Enter Password",
+                  filled: true,
+                  fillColor: CryptoColor.textFormField,
+                  contentPadding: EdgeInsets.only(top: 13,left: 10),
+                  border: InputBorder.none,
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _obscureText ? Icons.visibility : Icons.visibility_off_outlined,
+                      size: 18,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _obscureText = !_obscureText;
+                      });
+                    },
                   ),
                 ),
               ),
-            ),
-          ),
+              SizedBox(height: 10),
+              _buildValidationRule("Minimum of 8 characters", isValidLength),
+              SizedBox(height: 8,),
+              _buildValidationRule("At least one uppercase character", hasUppercase),
+              SizedBox(height: 8,),
+              _buildValidationRule("At least one number", hasNumber),
+              SizedBox(height: 8,),
+              _buildValidationRule(
+                  "At least one unique character (e.g. @\$%^&*)", hasSpecialCharacter),
               SizedBox(
                 height: large * 0.02,
               ),

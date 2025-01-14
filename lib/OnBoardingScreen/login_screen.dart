@@ -23,20 +23,20 @@ class _LoginScreenState extends State<LoginScreen> {
         backgroundColor: CryptoColor.white,
         body: Column(
           children: [
-            Stack(
-              children: [
-                Image.asset("assets/images/backGraound.png"),
-                Positioned(
-                  top: 50,
-                  left: 0,
-                  bottom: -20,
-                  right: 0,
-      
-                  child: Image.asset("assets/images/onboding_last.png"),
-                ),
-              ],
-            ),
-      
+            // Stack(
+            //   children: [
+            //     Image.asset("assets/images/backGraound.png"),
+            //     Positioned(
+            //       top: 50,
+            //       left: 0,
+            //       bottom: -20,
+            //       right: 0,
+            //
+            //       child: Image.asset("assets/images/onboding_last.png"),
+            //     ),
+            //   ],
+            // ),
+            Image.asset("assets/images/onboding_last.png"),
       
             SizedBox(height: 20,),
             CustomTextCenter(text: "Enjoy Seamless Crypto Trading,\n& Bill Payment Services\n Anytime, Anywhere & Any day.", fontSize: 5,color: CryptoColor.textBold,fontWeight: FontWeight.bold,),
