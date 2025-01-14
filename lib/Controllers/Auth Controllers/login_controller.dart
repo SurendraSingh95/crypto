@@ -21,6 +21,7 @@ class LoginController extends GetxController {
 
   String _fcmToken = '';
   final formKey = GlobalKey<FormState>();
+  final formKey1 = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final verifyMobileController = TextEditingController();
   final passwordController = TextEditingController();

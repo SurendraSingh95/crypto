@@ -20,7 +20,9 @@ class _HomeScreenState extends State<HomeScreen> {
   double large = Constants.largeSize;
   double h = Constants.screen.height;
   double w = Constants.screen.width;
+  bool _isBalanceVisible = true;
 
+  bool _isImagesVisible = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,7 +37,74 @@ class _HomeScreenState extends State<HomeScreen> {
                 clipBehavior: Clip.none,
                 // Allows the positioned widget to overflow
                 children: [
-                  // Top Card
+                  // Card(
+                  //   color: CryptoColor.textFormField,
+                  //   shape: RoundedRectangleBorder(
+                  //     borderRadius: BorderRadius.circular(15),
+                  //   ),
+                  //   elevation: 0,
+                  //   child: Padding(
+                  //     padding: const EdgeInsets.all(16.0),
+                  //     child: Column(
+                  //       children: [
+                  //         Row(
+                  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //           children: [
+                  //             Row(
+                  //               children: [
+                  //                 CustomText(text: "Available Balance NGN", fontSize: 5,fontWeight: FontWeight.bold,color: CryptoColor.textBold,),
+                  //
+                  //                 SizedBox(width: 8),
+                  //                 Image.asset('assets/home/naira.png'),
+                  //               ],
+                  //             ),
+                  //             Row(
+                  //               children: [
+                  //                 Image.asset('assets/home/eye.png'),
+                  //                 SizedBox(width: 8),
+                  //                 GestureDetector(
+                  //                   onTap: () {
+                  //                     setState(() {
+                  //                       _isImagesVisible = !_isImagesVisible; // Toggle visibility
+                  //                     });
+                  //                   },
+                  //                   child: Image.asset('assets/home/drop.png'),
+                  //                 ),
+                  //               ],
+                  //             ),
+                  //           ],
+                  //         ),
+                  //         SizedBox(height: 10),
+                  //         Row(
+                  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //           children: [
+                  //             Column(
+                  //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //               children: [
+                  //                 CustomText(text: "₦********", fontSize: 5,fontWeight: FontWeight.bold,color: CryptoColor.textBold,),
+                  //                 CustomText(text: "0.0000 USD", fontSize: 4,fontWeight: FontWeight.normal,color: CryptoColor.textNormal,),
+                  //
+                  //               ],
+                  //             ),
+                  //             SizedBox(height: 10),
+                  //             Column(
+                  //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //               children: _isImagesVisible
+                  //                   ? [
+                  //                 Image.asset('assets/home/Open eyes.png'),
+                  //                 SizedBox(height: 10),
+                  //                 Image.asset('assets/home/pngwing.png'),
+                  //               ]
+                  //                   : [], // Hide images if _isImagesVisible is false
+                  //             ),
+                  //           ],
+                  //         ),
+                  //         SizedBox(height: 20),
+                  //       ],
+                  //     ),
+                  //   ),
+                  // ),
+
                   Card(
                     color: CryptoColor.textFormField,
                     shape: RoundedRectangleBorder(
@@ -52,17 +121,38 @@ class _HomeScreenState extends State<HomeScreen> {
                               Row(
                                 children: [
                                   CustomText(
-                                      text: 'Available Balance NGN',
-                                      fontSize: 4),
+                                    text: "Available Balance NGN",
+                                    fontSize: 5,
+                                    fontWeight: FontWeight.bold,
+                                    color: CryptoColor.textBold,
+                                  ),
                                   SizedBox(width: 8),
                                   Image.asset('assets/home/naira.png'),
                                 ],
                               ),
                               Row(
                                 children: [
-                                  Image.asset('assets/home/eye.png'),
+                                  GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        _isBalanceVisible = !_isBalanceVisible; // Toggle visibility
+                                      });
+                                    },
+                                    child: Image.asset(
+                                      _isBalanceVisible
+                                          ? 'assets/home/eye_closs.png' // Image for visible state
+                                          : 'assets/home/eye.png', // Image for hidden state
+                                    ),
+                                  ),
                                   SizedBox(width: 8),
-                                  Image.asset('assets/home/drop.png'),
+                                  GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        _isImagesVisible = !_isImagesVisible; // Toggle image visibility
+                                      });
+                                    },
+                                    child: Image.asset('assets/home/drop.png'),
+                                  ),
                                 ],
                               ),
                             ],
@@ -71,17 +161,35 @@ class _HomeScreenState extends State<HomeScreen> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              CustomText(text: '₦********', fontSize: 6),
-                              Image.asset('assets/home/Open eyes.png'),
-                            ],
-                          ),
-                          SizedBox(height: 10),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              CustomText(text: '0.0000 USD', fontSize: 4),
-                              Image.asset(
-                                'assets/home/pngwing.png',
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  CustomText(
+                                    text: _isBalanceVisible
+                                        ? "₦100,250.00"
+                                        : "₦********",
+                                    fontSize: 5,
+                                    fontWeight: FontWeight.bold,
+                                    color: CryptoColor.textBold,
+                                  ),
+                                  CustomText(
+                                    text: "0.0000 USD",
+                                    fontSize: 4,
+                                    fontWeight: FontWeight.normal,
+                                    color: CryptoColor.textNormal,
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 10),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: _isImagesVisible
+                                    ? [
+                                  Image.asset('assets/home/Open eyes.png'),
+                                  SizedBox(height: 10),
+                                  Image.asset('assets/home/pngwing.png'),
+                                ]
+                                    : [],
                               ),
                             ],
                           ),
@@ -90,7 +198,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                   ),
-
                   // Bottom Card
                   Positioned(
                     top: 122, // Adjust this value to control overlap

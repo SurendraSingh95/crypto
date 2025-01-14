@@ -1,11 +1,16 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:crepto/Customs/CustomButton.dart';
 import 'package:crepto/Customs/CustomText.dart';
 import 'package:crepto/Customs/customAppBar.dart';
 import 'package:crepto/color/colors.dart';
 import 'package:crepto/constants/constants.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
-
+import 'package:http/http.dart' as http;
+import 'package:dropdown_search/dropdown_search.dart';
 
 
 class GiftCardRatesScreen extends StatefulWidget {
@@ -26,7 +31,49 @@ class _GiftCardRatesScreenState extends State<GiftCardRatesScreen> {
   double large = Constants.largeSize;
   double h = Constants.screen.height;
   double w = Constants.screen.width;
+  List<Map<String, String>> countries = [];
+  String? selectedCountry;
 
+  // Fetch all countries from the API
+
+
+  Future<void> fetchCountries() async {
+    try {
+      final response = await http.get(Uri.parse('https://restcountries.com/v3.1/all?fields=name,flags'))
+          .timeout(Duration(seconds: 10));
+
+      if (response.statusCode == 200) {
+        List<dynamic> countryList = json.decode(response.body);
+        setState(() {
+          countries = countryList.map((country) {
+            return {
+              'id': (country['ccn3']?.toString() ?? ''),
+              'name': (country['name']['common'] ?? '') as String,
+              'image': (country['flags']['png'] ?? '') as String,
+            };
+          }).toList();
+        });
+      } else {
+        // Handle error
+        print("Failed to load countries");
+      }
+    } on TimeoutException {
+      print("Request timed out, retrying...");
+      fetchCountries();  // Retry logic
+    } catch (e) {
+      // Handle any other exceptions
+      print("Error occurred while fetching countries: $e");
+    }
+  }
+
+
+
+
+  @override
+  void initState() {
+    super.initState();
+    fetchCountries();
+  }
 
   String? selectedGiftCard;
   final List<Map<String, String>> giftCards = [
@@ -38,14 +85,6 @@ class _GiftCardRatesScreenState extends State<GiftCardRatesScreen> {
   ];
 
 
-  String? selectedCountry;
-  final List<Map<String, String>> countries = [
-    {'id': '1', 'name': 'Argentina', 'image': 'assets/images/Flag-Argentina 1.png'},
-    {'id': '2', 'name': 'Angola', 'image': 'assets/images/Flag_of_Angola 1.png'},
-    {'id': '3', 'name': 'Argentina', 'image': 'assets/images/Flag-Argentina 1.png'},
-    {'id': '4', 'name': 'Angola', 'image': 'assets/images/Flag_of_Angola 1.png'},
-
-  ];
   void calculateRate() {
     setState(() {
       rate = cardValue.isNotEmpty ? double.parse(cardValue) * 1730 : 0.0;
@@ -146,43 +185,123 @@ class _GiftCardRatesScreenState extends State<GiftCardRatesScreen> {
             ),
             SizedBox(height: 16),
             CustomText(text: "Select Country", fontSize: 4, color: CryptoColor.textBold, fontWeight: FontWeight.normal),
-            Card(
+
+        // countries.isEmpty
+        //     ? Center(child: CupertinoActivityIndicator())  // Show a loading indicator while fetching
+        //     : Card(
+        //   elevation: 0,
+        //   color: CryptoColor.textFormField,
+        //   child: DropdownButtonHideUnderline(
+        //     child: DropdownButton2<String>(
+        //       isExpanded: true,
+        //       hint: CustomText(
+        //         text: "Select Country",
+        //         fontSize: 4,
+        //         color: CryptoColor.cardBox,
+        //         fontWeight: FontWeight.normal,
+        //       ),
+        //       value: selectedCountry,
+        //       items: countries.map((country) {
+        //         return DropdownMenuItem(
+        //           value: country['name'],
+        //           child: Row(
+        //             children: [
+        //               // Display the flag image
+        //               Image.network(
+        //                 country['image']!,
+        //                 width: 30,
+        //                 height: 50,
+        //               ),
+        //               SizedBox(width: 8),
+        //               // Display the country name
+        //               CustomText(text: country['name']!, fontSize: 3.5),
+        //             ],
+        //           ),
+        //         );
+        //       }).toList(),
+        //       onChanged: (value) {
+        //         setState(() {
+        //           selectedCountry = value;
+        //         });
+        //       },
+        //     ),
+        //   ),
+        // ),
+            countries.isEmpty
+                ? Center(child: CupertinoActivityIndicator()) // Show a loading indicator while fetching
+                : Card(
               elevation: 0,
               color: CryptoColor.textFormField,
-              child: DropdownButtonHideUnderline(
-                child: DropdownButton2(
-                  isExpanded: true,
-                  hint: CustomText(
+              child: DropdownSearch<Map<String, String>>(
+                dropdownBuilder: (context, selectedItem) {
+                  return selectedItem == null
+                      ? CustomText(
                     text: "Select Country",
                     fontSize: 4,
                     color: CryptoColor.cardBox,
                     fontWeight: FontWeight.normal,
-                  ),
-                  value: selectedCountry,
-                  items: countries.map((country) {
-                    return DropdownMenuItem(
-                      value: country['id'],
-                      child: Row(
-                        children: [
-                          Image.asset(
-                            country['image']!,
-                            width: 30,
-                            height: 50,
-                          ),
-                          SizedBox(width: 8),
-                          CustomText(text: country['name']!, fontSize: 3.5),
-                        ],
+                  )
+                      : Row(
+                    children: [
+                      Image.network(
+                        selectedItem['image']!,
+                        width: 30,
+                        height: 50,
                       ),
+                      SizedBox(width: 8),
+                      CustomText(text: selectedItem['name']!, fontSize: 3.5),
+                    ],
+                  );
+                },
+                popupProps: PopupProps.menu(
+
+                  showSearchBox: true,
+                  searchFieldProps: TextFieldProps(
+                    cursorColor: CryptoColor.textFormField,
+                    decoration: InputDecoration(
+
+                      hintText: "Search Country",
+                      hintStyle: TextStyle(color: CryptoColor.cardBox),
+                      //border: InputBorder.none
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(color: CryptoColor.textNormal.withOpacity(0.5)),
+                      ),
+                    ),
+                  ),
+                  itemBuilder: (context, country, isSelected) {
+                    return ListTile(
+                      leading: Image.network(
+                        country['image']!,
+                        width: 30,
+                        height: 50,
+                      ),
+                      title: Text(country['name']!),
                     );
-                  }).toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      selectedCountry = value;
-                    });
                   },
                 ),
+                dropdownDecoratorProps: DropDownDecoratorProps(
+
+                  dropdownSearchDecoration: InputDecoration(
+
+                    fillColor: CryptoColor.textFormField,
+                    filled: true,
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.all(10),
+                    hintText: "Select Country",
+                    hintStyle: TextStyle(color: CryptoColor.cardBox),
+                  ),
+                ),
+                items: countries,
+                onChanged: (value) {
+                  setState(() {
+
+                    selectedCountry = value?['name'];
+                  });
+                },
               ),
             ),
+
             SizedBox(height: 16),
             CustomText(text: "Receipt Availability", fontSize: 4, color: CryptoColor.textBold, fontWeight: FontWeight.normal),
             Row(
