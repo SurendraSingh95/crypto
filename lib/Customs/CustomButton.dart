@@ -116,7 +116,7 @@ class CustomButtonHistory extends StatelessWidget {
               child: Text(
                 text,
                 style: TextStyle(
-                  color: CryptoColor.textNormal,
+                  color: CryptoColor.white,
                   letterSpacing: letterSpacing,
                   fontWeight: FontWeight.bold,
                   fontFamily: fontFamily,

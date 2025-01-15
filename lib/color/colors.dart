@@ -13,6 +13,7 @@ class CryptoColor {
   static const Color cardBox = Color(0xFF958F94);
   static const Color boxOTP = Color(0xFF668180);
   static const Color cardOutline = Color(0xFFE5E6E8);
+  static const Color profileCard = Color(0xFFF6F8F8);
 
 
 }

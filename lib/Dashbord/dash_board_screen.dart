@@ -1,3 +1,4 @@
+import 'package:crepto/Dashbord/Sarvise/sarvise_screen.dart';
 import 'package:crepto/color/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -5,6 +6,8 @@ import 'package:get/get_core/src/get_main.dart';
 
 import 'Home/home_screen.dart';
 import 'Home/notification_screen.dart';
+import 'Profile/profile_screen.dart';
+import 'Wallet/wallet_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -17,10 +20,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
   int _currentIndex = 0;
   final List<Widget> _screens = [
     HomeScreen(),
+    WalletScreen(),
     HomeScreen(),
-    HomeScreen(),
-    HomeScreen(),
-    HomeScreen(),
+    SarviseScreen(),
+    ProfileScreen(),
     // WalletScreen(),
     // TradeScreen(),
     // ServicesScreen(),
