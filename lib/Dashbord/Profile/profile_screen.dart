@@ -1,8 +1,10 @@
+import 'package:crepto/Controllers/change_themes_controller.dart';
 import 'package:crepto/Customs/CustomText.dart';
 import 'package:crepto/color/colors.dart';
 import 'package:crepto/constants/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -12,13 +14,16 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  var themeController = Get.find<ThemeController>();
   double large = Constants.largeSize;
   double h = Constants.screen.height;
   double w = Constants.screen.width;
   @override
   Widget build(BuildContext context) {
+    bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
-      backgroundColor: CryptoColor.white,
+      backgroundColor: isDarkMode ?  CryptoColor.textNormal : CryptoColor.white,
+
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: SingleChildScrollView(
@@ -189,6 +194,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           Image.asset("assets/profile/bank.png"),
                           SizedBox(width: large*0.01,),
                           CustomText(text: 'Dark Mode', fontSize: 3.5,color: CryptoColor.textNormal,fontWeight: FontWeight.normal,),
+                          Switch(
+                          value: themeController.isDarkMode.value,
+                            onChanged: (value) {
+                            setState(() {
+
+                            });
+                              themeController.toggleTheme();
+                            },
+                          )
                         ],
                       ),
                       SizedBox(height: large*0.02,),
